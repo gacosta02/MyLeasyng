@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyLeasing.Web.Data;
 using MyLeasing.Web.Data.Entities;
+using MyLeasing.Web.Helpers;
 
 namespace MyLeasing.Web
 {
@@ -30,6 +32,12 @@ namespace MyLeasing.Web
             {
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            //lo hace una vez y no vuelve a inyectar
+            services.AddTransient<SeedDb>();
+            //la primera vez que la llame crea el object en memoria y ocupa mucha memoria
+            //services.AddSingleton<UserHelper>();
+            //lo inyecta cada vez que lo necesita y crea new object
+            services.AddScoped<IUserHelper, UserHelper>();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
